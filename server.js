@@ -60,6 +60,8 @@ const io = new socketIo( server, {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+// RENDER PROBLEMA SOCKETS AUTH
+app.use(express.urlencoded({ extended: true }));
 
 
 
@@ -127,6 +129,25 @@ const CONFIG = {
 };
 
 
+// VALIDACIONES RENDER PROBLEMA HASHPASS VACIO
+if (!CONFIG.jwt.secret) {
+
+    console.error("[DEBUG RENDER] FATAL: JWT secret missing (process.env.JWT_SECRET)");
+    process.exit(1);
+  }
+  
+  if (!CONFIG.shell.password) {
+
+    console.error("[DEBUG RENDER] SHELL_HASHWORD is missing or empty. Authentication WILL FAIL. Check deployment env.");
+  
+} else {
+
+    console.log("[BOOT] SHELL_HASHWORD length:", CONFIG.shell.password.length);
+
+}
+  
+
+
   // BUILTINs
 const SHELL_BUILTINS = [
     'cd'
@@ -139,9 +160,31 @@ const SHELL_BUILTINS = [
 const validatePassHash = async (password) => {
 
 
-    return await bcrypt.compare(password, CONFIG.shell.password);
+    try {
+      
+        if (!password || typeof password !== 'string') {
+            console.warn('[DEBUG validatePassHash] Missing or invalid incoming password:', typeof password);
+            return false;
+      
+        }
+        
+        const hash = CONFIG.shell.password;
+      
+        if (!hash || typeof hash !== 'string') {
+   
+            console.error('[DEBUG validatePassHash] Stored password hash missing or invalid (CONFIG.shell.password).');
+            return false;
+        }
+        
+        return await bcrypt.compare(password, hash);
+    
+    } catch (err) {
 
-}
+        console.error('[DEBUG validatePassHash] validatePassHash error:', err && err.message);
+        return false;
+    }
+  };
+  
 // Se asigna por IP pero, probablemente, haya que añadir ip && useragent
 function generateJWT(socketId, ip) {
 
@@ -924,6 +967,9 @@ io.on('connection', (socket) => {
 
     socket.on('authenticate', async (data) => {
 
+        // RENDER PROBLEMA SOCKET AUTH
+        console.log('[DEBUG SOCKET authenticate] data:', typeof data, data && Object.keys(data));
+
 
         // Validar estructura
         if (!data || typeof data !== 'object' || typeof data.password !== 'string') {
@@ -1347,6 +1393,10 @@ app.use('/auth', authLimiter);
 
 
 app.post('/auth/validate', async (req, res) => {
+
+    // RENDER PROBLEMA AUTH, RETIRAR
+    console.log('[DEBUG /auth/validate] headers:', req.headers['content-type']);
+    console.log('[DEBUG /auth/validate] body keys:', Object.keys(req.body));
  
     const { password } = req.body;
 
