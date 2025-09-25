@@ -1,0 +1,84 @@
+{
+    "name": "websocket-shell-react",
+    "version": "0.0.1",
+    "type": "module",
+    "description": "Secure WebShell with password authentication - React 18 + Socket.IO",
+    "author": "alexandrglm",
+    "license": "MIT",
+    "engines": {
+        "node": ">=18.0.0",
+        "npm": ">=9.0.0"
+    },
+    "scripts": {
+        "dev": "vite --host 0.0.0.0 --port 7777",
+        "start": "vite --host 0.0.0.0 --port 7777 --open",
+        "build": "vite build",
+        "preview": "vite preview --port 8080 --host 0.0.0.0 --open",
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "lint:fix": "eslint . --ext js,jsx --fix",
+        "clean": "rm -rf ./dist ./node_modules/.vite",
+        "clean:all": "rm -rf ./dist ./node_modules ./package-lock.json",
+        "reinstall": "rm -rf ./dist ./node_modules ./package-lock.json && npm install"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-svg-core": "^7.0.1",
+        "@fortawesome/free-brands-svg-icons": "^7.0.1",
+        "@fortawesome/free-solid-svg-icons": "^7.0.1",
+        "@fortawesome/react-fontawesome": "^3.0.2",
+        "@reduxjs/toolkit": "^2.9.0",
+        "bcrypt": "^6.0.0",
+        "cors": "^2.8.5",
+        "dotenv": "^17.2.2",
+        "express": "^5.1.0",
+        "express-rate-limit": "^8.1.0",
+        "framer-motion": "^11.5.4",
+        "jsonwebtoken": "^9.0.2",
+        "node-pty": "^1.0.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1",
+        "react-fontawesome": "^1.7.1",
+        "react-redux": "^9.2.0",
+        "react-router-dom": "^7.9.2",
+        "socket.io": "^4.8.1",
+        "socket.io-client": "^4.7.2"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.9.1",
+        "@types/react": "^18.3.5",
+        "@types/react-dom": "^18.3.0",
+        "@vitejs/plugin-react": "^4.3.1",
+        "eslint": "^9.9.1",
+        "eslint-plugin-react": "^7.35.0",
+        "eslint-plugin-react-hooks": "^5.1.0-rc-fb9a90fa48-20240614",
+        "eslint-plugin-react-refresh": "^0.4.11",
+        "globals": "^15.9.0",
+        "sass": "^1.92.1",
+        "vite": "^5.4.1"
+    },
+    "keywords": [
+        "webshell",
+        "terminal",
+        "react18",
+        "socket.io",
+        "secure",
+        "authentication",
+        "vite",
+        "scss"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alexandrglm/websocket-shell-react.git"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

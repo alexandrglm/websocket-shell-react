@@ -1,0 +1,66 @@
+
+// ============================================
+// VARIABLES CSS GLOBALES
+// ============================================
+
+:root {
+  
+  // Terminal (NO cambian con theme)
+  --primary-color: #b3ff00;
+  --background-color: #0c0c0c;
+  --header-color: #2a2a2a;
+  --error-color: #ff6b6b;
+  --warning-color: #ffff00;
+  --info-color: #00dddd;
+  
+
+  // Terminal dimensiones/efectos
+  --font-family: "JetBrains Mono", "Courier New", monospace;
+  --font-size: 14px;
+  --border-radius: 8px;
+  --max-width: 90vw;
+  --min-height: 70vh;
+  --max-height: 85vh;
+  --glow-intensity: 0.3;
+  --transition-speed: 0.3s;
+  --shadow-depth: 30px;
+}
+
+
+
+
+// Theme variables - SOLO para body background y navbar
+:root {
+  
+  --app-bg-primary: rgb(19, 20, 20);
+  --app-bg-secondary: #1a1a1a;
+  --navbar-text: #ffffff;
+  --navbar-accent: #b3ff00;
+  --navbar-accent-hover: #82b803;
+  --navbar-border: rgb(235, 234, 219);
+}   
+
+[data-theme="light"] {
+
+  --app-bg-primary: rgb(230, 235, 219);
+
+  --app-bg-secondary:  rgb(228, 227, 227);;
+  --navbar-text: #333333;
+  --navbar-accent: #7c0053;
+  --navbar-accent-hover: #5c0056;
+  --navbar-border: rgb(19, 20, 20);
+
+}
+
+
+
+
+ // Z-index scale - ESTA VARIABLE FALTABA
+$z-index: (
+  modal: 1000,
+  dropdown: 100,
+  fixed: 50,
+  nav: 10,
+  base: 1
+);
+

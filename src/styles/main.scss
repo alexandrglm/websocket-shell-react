@@ -1,0 +1,110 @@
+// ============================================
+// src/styles/main.scss - Standalone Styles
+// ============================================
+
+@use './vars.scss';
+@use './mixins.scss';
+@use './components/webshell';
+@use './components/navbar';
+@use './components/auth-screen';
+@use './components/footer';
+
+// Reset básico
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 16px;
+    height: 100%;
+  }
+  
+  body {
+    font-family: "JetBrains Mono", "Courier New", monospace;
+    line-height: 1.4;
+    height: 100%;
+    margin: 0;
+    background: #000000;
+    color: #00ff00;
+    overflow: hidden;
+  }
+  
+  #root {
+    height: 100%;
+  }
+  
+  .app {
+
+    height: 100vh;
+    width: 100vw;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    background: linear-gradient(135deg, var(--app-bg-primary) 0%, var(--app-bg-secondary) 100%);
+    padding: 0;
+
+    // EL FOOTER LO ARREGLO AQUI!
+    padding-bottom: 40px;
+
+
+    .navbar-wrapper {
+
+      flex-shrink: 0;
+
+    }
+
+    .body-wrapper {
+
+      width: 100%; // Atento -> Este es el primer límite del body wrapper, pero la app webshell tmn tiene su propio límite DESPUÉS de este
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+  }
+
+
+  // ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 768px) {
+    :root {
+      --font-size: 12px;
+      --max-width: 95vw;
+      --min-height: 60vh;
+      --max-height: 80vh;
+    }
+    
+    .terminal-body {
+      padding: 12px;
+    }
+    
+    .auth-container {
+      margin: 0 10px;
+      padding: 30px 20px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    :root {
+      --font-size: 11px;
+      --max-width: 98vw;
+    }
+    
+    .terminal-body {
+      padding: 8px;
+    }
+    
+    .auth-container {
+      margin: 0 5px;
+      padding: 25px 15px;
+    }
+  }
+  

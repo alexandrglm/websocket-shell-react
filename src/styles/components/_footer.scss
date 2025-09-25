@@ -1,0 +1,72 @@
+// styles/components/_footer.scss
+@use 'sass:map';
+@use '../vars' as *;
+
+// ============================================
+// FOOTER
+// ============================================
+.footer {
+
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    
+    width: 100%;
+    height: 20px;
+    
+    background: var(--app-bg-secondary);
+    border-top: 1px solid var(--navbar-border);
+
+    z-index: map.get($z-index, nav);
+
+    .footer-content {
+
+        display: flex;
+        align-items: center;
+
+        gap: 10px;
+        color: var(--navbar-text);
+        font-size: 0.8rem;
+        opacity: 0.8;
+
+        .footer-github {
+
+            color: var(--navbar-text);
+            text-decoration: none;
+            
+            display: flex;
+            align-items: center;
+            
+            transition: all 0.2s ease;
+
+
+            &:hover,
+            &:focus,
+            &:active {
+                color: var(--navbar-accent);
+                transform: scale(1.1);
+                outline: none;
+            }
+        
+            // Para dispositivos táctiles
+            @media (hover: none) and (pointer: coarse) {
+                &:active {
+                    color: var(--navbar-accent);
+                    transform: scale(1.1);
+                }
+            }
+
+            svg {
+                width: 16px;
+                height: 16px;
+
+                margin: 0 10px 0 20px;
+            }
+        }
+    }
+}
