@@ -28,12 +28,12 @@ const corsOptions = {
 
   
     origin: [
-        
-        'http://localhost:3000',
-        'http://localhost:7777',
+        /^https?:\/\/localhost(:\d+)?$/,
+        /^https?:\/\/0\.0\.0\.0(:\d+)?$/,
+        /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
+        'https://websocket-shell-react.onrender.com',
         'https://devel.run',
-        /\.onrender\.com$/,
-        /localhost:\d+$/
+        /\.onrender\.com$/
     ],
     methods: ['GET', 'POST'],
     credentials: true
