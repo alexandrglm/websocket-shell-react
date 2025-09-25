@@ -130,6 +130,11 @@ const CONFIG = {
 
 
 // VALIDACIONES RENDER PROBLEMA HASHPASS VACIO
+console.log("[BOOT] SHELL_HASHWORD length:", CONFIG.shell.password?.length);
+console.log("[BOOT] SHELL_HASHWORD value:", CONFIG.shell.password);
+
+
+
 if (!CONFIG.jwt.secret) {
 
     console.error("[DEBUG RENDER] FATAL: JWT secret missing (process.env.JWT_SECRET)");
