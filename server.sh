@@ -2,7 +2,7 @@
 set -e
 
 echo "========================================================="
-echo "🚀 Devel.run Builder & Deploy
+echo "🚀 Devel.run Builder & Deploy"
 echo "========================================================="
 
 export NODE_ENV=production
