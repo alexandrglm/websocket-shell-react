@@ -7,14 +7,16 @@ import io from 'socket.io-client';
 
 const SOCKET_CONFIG = {
 
-  url: 'http://localhost:3001',
+  url: import.meta.env.VITE_SHELL_URI,
   options: {
     autoConnect: false,
     transports: ['websocket', 'polling']
   }
 };
 
+
 export const useSocket = () => {
+
   const [socket, setSocket] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionError, setConnectionError] = useState(null);
@@ -45,6 +47,7 @@ export const useSocket = () => {
     setSocket(newSocket);
   }, [])
   // }, [socket]);
+  console.log('import.meta.env:', import.meta.env.VITE_SHELL_URI);
 
   const disconnect = useCallback(() => {
     if (socket) {
@@ -63,12 +66,13 @@ export const useSocket = () => {
 
   
   // CHANGEMARK DEBUGGING SEGURIDAD SOCKETTTT RETIRAR!!!! CHANGE
+  /*
   useEffect(() => {
     if (socket) {
       window.socket = socket;
     }
   }, [socket]);
-
+  */
 
   useEffect(() => {
     return () => {
