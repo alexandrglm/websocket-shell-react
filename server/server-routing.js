@@ -2,6 +2,8 @@
 // server/server-routing.js - Domain-based Routing
 // ============================================
 
+import path from 'path'
+
 export function setupDomainRouting(app, domainMap) {
     
     console.log('[ROUTING] Setting up domain-based routing...');
@@ -27,6 +29,24 @@ export function setupDomainRouting(app, domainMap) {
         console.log(`[ROUTING] ${fullHost} (${domain}) → ${req.targetModule}`);
         
         next();
+    });
+
+
+
+    // ============================================
+    // SPA ROUTING CATCHALL VERDADERO
+    // ============================================
+    app.get('*', (req, res, next) => {
+        // Skip assets y API routes
+        if (req.url.startsWith('/assets/') || req.url.startsWith('/api/')) {
+            return next();
+        }
+
+        const htmlFile = req.targetModule === 'serverdos'
+        ? 'index-serverdos.html'
+        : 'index-webshell.html';
+
+        res.sendFile(path.join(process.cwd(), 'dist', 'public', htmlFile));
     });
     
     console.log('[ROUTING] Domain routing middleware installed');

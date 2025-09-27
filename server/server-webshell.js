@@ -319,13 +319,7 @@ export function setupWebshell(app, server, options = {}) {
         }
     });
 
-    // SPA routing catchall
-    app.get(/^(?!\/(auth|status)).*/, (req, res, next) => {
-        if (req.targetModule !== 'webshell') {
-            return next(); // Not for us, pass to next handler
-        }
-        res.sendFile(path.join(process.cwd(), 'dist', 'public', 'index-webshell.html'));
-    });
+
 
     // ============================================
     // STATS AND UTILITIES
