@@ -7,13 +7,10 @@ import io from 'socket.io-client';
 
 const SOCKET_CONFIG = {
 
-  url: process.env.REACT_APP_SHELL_URI,
+  url: 'http://localhost:3001',
   options: {
     autoConnect: false,
-    cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
-    }
+    transports: ['websocket', 'polling']
   }
 };
 
@@ -65,7 +62,7 @@ export const useSocket = () => {
 
 
   
-  // DEBUGGING SEGURIDAD SOCKETTTT RETIRAR!!!!
+  // CHANGEMARK DEBUGGING SEGURIDAD SOCKETTTT RETIRAR!!!! CHANGE
   useEffect(() => {
     if (socket) {
       window.socket = socket;
