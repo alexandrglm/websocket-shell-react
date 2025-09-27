@@ -1,0 +1,167 @@
+// ============================================
+// _app-moduler.scss - Module Loader Styles
+// ============================================
+@use '../vars' as *;
+@use '../mixins' as *;
+// ============================================
+// MODULE LOADER
+// ============================================
+.module-loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #000;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+
+    .loader-content {
+        text-align: center;
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid #333;
+        border-top: 3px solid #00ff00;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+    }
+
+    h2 {
+        margin: 0 0 10px 0;
+        font-size: 1.5rem;
+        text-shadow: 0 0 10px #00ff00;
+    }
+
+    p {
+        margin: 0;
+        opacity: 0.7;
+        font-size: 0.9rem;
+    }
+}
+
+// ============================================
+// MODULE ERROR
+// ============================================
+.module-error {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #000;
+    color: #ff6b6b;
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+
+    .error-content {
+        text-align: center;
+        max-width: 600px;
+    }
+
+    .error-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    h2 {
+        margin: 0 0 20px 0;
+        font-size: 2rem;
+        color: #ff6b6b;
+        text-shadow: 0 0 10px #ff6b6b;
+    }
+
+    .error-module {
+        font-size: 1.1rem;
+        margin-bottom: 10px;
+    }
+
+    .error-details {
+        background: rgba(255, 107, 107, 0.1);
+        border: 1px solid #ff6b6b;
+        border-radius: 4px;
+        padding: 10px;
+        margin: 20px 0;
+        font-size: 0.9rem;
+        word-break: break-word;
+    }
+
+    .error-actions {
+        margin: 30px 0;
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .retry-btn, 
+    .reload-btn {
+        padding: 10px 20px;
+        border: 1px solid #ff6b6b;
+        background: rgba(255, 107, 107, 0.1);
+        color: #ff6b6b;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba(255, 107, 107, 0.2);
+            transform: translateY(-2px);
+        }
+    }
+
+    .error-info {
+        margin-top: 30px;
+        text-align: left;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 4px;
+        padding: 15px;
+
+        h3 {
+            margin: 0 0 10px 0;
+            color: #00ff00;
+        }
+
+        ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 5px 0;
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+    }
+}
+
+// ============================================
+// ANIMATIONS
+// ============================================
+@keyframes spin {
+    0% { 
+        transform: rotate(0deg); 
+    }
+    100% { 
+        transform: rotate(360deg); 
+    }
+}
+
+// ============================================
+// RESPONSIVE
+// ============================================
+@media (max-width: 640px) {
+    .module-error {
+        .error-actions {
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .retry-btn, 
+        .reload-btn {
+            width: 200px;
+        }
+    }
+}
