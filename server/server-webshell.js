@@ -324,7 +324,7 @@ export function setupWebshell(app, server, options = {}) {
         if (req.targetModule !== 'webshell') {
             return next(); // Not for us, pass to next handler
         }
-        res.sendFile(path.join(process.cwd(), 'dist', 'public', 'index.html'));
+        res.sendFile(path.join(process.cwd(), 'dist', 'public', 'index-webshell.html'));
     });
 
     // ============================================
