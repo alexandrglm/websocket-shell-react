@@ -36,7 +36,7 @@ export function setupDomainRouting(app, domainMap) {
     // ============================================
     // SPA ROUTING CATCHALL VERDADERO
     // ============================================
-    app.get('*', (req, res, next) => {
+    app.use( (req, res, next) => {
         // Skip assets y API routes
         if (req.url.startsWith('/assets/') || req.url.startsWith('/api/')) {
             return next();
