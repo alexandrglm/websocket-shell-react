@@ -8,13 +8,10 @@ export function setupServerDos(app) {
     console.log('[SERVERDOS] Initializing ServerDos module...');
 
     // Handle serverdos routing - only respond if targetModule is 'serverdos'
-    app.get('/(.*)', (req, res, next) => {
-        
+    app.use((req, res, next) => {  // Sin route pattern específico
         if (req.targetModule !== 'serverdos') {
-            return next(); // Not for us, pass to next handler
+            return next();
         }
-        
-        // Serve the serverdos app with specific HTML
         res.sendFile(path.join(process.cwd(), 'dist', 'public', 'index-serverdos.html'));
     });
 
