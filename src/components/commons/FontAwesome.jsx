@@ -9,7 +9,10 @@ import {
     faSun,
     faMoon,
     faPlugCircleXmark,
-    faHeartCrack
+    faHeartCrack,
+    faCircleInfo,
+    faArrowUp,
+    faArrowDown
 
 } from '@fortawesome/free-solid-svg-icons'
 
@@ -25,4 +28,4 @@ export const Icons = ( { icon, size, color } ) => {
 }
 
 
-export { faUser, faUserSlash, faLock, faSun, faMoon, faPlugCircleXmark, faHeartCrack, faGithub }
+export { faUser, faUserSlash, faLock, faSun, faMoon, faPlugCircleXmark, faHeartCrack, faCircleInfo, faArrowUp, faArrowDown, faGithub }

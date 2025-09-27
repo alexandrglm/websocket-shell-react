@@ -11,7 +11,8 @@ import { useTerminal } from '../../hooks/useTerminal';
 import TerminalHeader from './TerminalHeader';
 import TerminalOutput from './TerminalOutput';
 import TerminalInput from './TerminalInput';
-import AuthForm from './AuthForm';
+import AuthForm from './modals/AuthModal';
+
 import { Icons, faHeartCrack } from '../commons/FontAwesome';
 
 const Terminal = ({ className = '' }) => {
@@ -27,6 +28,8 @@ const Terminal = ({ className = '' }) => {
   // para handleWebshellFocus()
   // Para mejorar inputm focus-captura click, useRef inicial  
   const terminalInputRef = useRef(null)
+
+  
   
   const { 
   
@@ -107,46 +110,8 @@ useEffect(() => {
 }, [socket, logout, clearOutput]);
 
 
-/*
-  if (!isAuthenticated) {
-    
-    return (
-    
-      <div className={`webshell ${className}`}>
-      
-        <AuthForm
-          onAuthenticate={authenticate}
-          isAuthenticating={isAuthenticating}
-          authError={authError}
-          remainingAttempts={remainingAttempts}
-          isLockedOut={isLockedOut}
-          isConnected={isConnected}
-        />
-      
-      </div>
-    );
-  }
-*/
 
 
-/*
-  // JLo hemos pasado a modal
-  if (showAuthForm) {
-    return (
-      <div className={`webshell ${className}`}>
-        <AuthForm
-          onAuthenticate={authenticate}
-          isAuthenticating={isAuthenticating}
-          authError={authError}
-          remainingAttempts={remainingAttempts}
-          isLockedOut={isLockedOut}
-          isConnected={isConnected}
-          onBack={() => setShowAuthForm(false)}
-        />
-      </div>
-    );
-  }
-*/
 
 
   const handleWebshellFocus = () => {
@@ -170,6 +135,9 @@ useEffect(() => {
         <TerminalHeader 
           isConnected={isConnected}
           onLogout={ () => { socket?.disconnect(); logout();}}
+          socket={socket}
+          executeCommand={executeCommand}
+          setShowAuthForm={setShowAuthForm}
         />
         
         <div className="terminal-body" ref={outputRef}>

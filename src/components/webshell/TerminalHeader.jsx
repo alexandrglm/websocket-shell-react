@@ -2,29 +2,31 @@
 // WEBSHELL -> Terminal Headers
 // ============================================
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import ConnectionStatus from './ConnectionStatus';
 
-const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout }) => {
+import AppMenu from './AppMenu';
+import HelpModal from './modals/HelpModal';
+import AboutModal from './modals/AboutModal';
 
-  const [ isFullScreen, setIsFullScreen ] = useState(false)
+import { setIsWebshellFullscreen } from '../../store/slices/appSlice'
 
 
-  // PARA DETECTAR FULLSCREEEN, o no, TIENE QUE IR ANTES DE LOS HANDLERS
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      
-      setIsFullscreen(!!document.fullscreenElement);
-    
-    };
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    
-    return () => {
-      
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
-    };
-  }, []);
+const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout, socket, executeCommand, setShowAuthForm }) => {
 
+  // const [ isFullScreen, setIsFullScreen ] = useState(false)
+  const [showAppMenu, setShowAppMenu] = useState(false)
+
+  console.log('TerminalHeader render - showAppMenu:', showAppMenu); // LOG 1
+
+  const [showHelpModal, setShowHelpModal] = useState(false);
+  const [showAboutModal, setShowAboutModal ] = useState(false)
+  
+  
+  //const { isWebshellFullscreen } = useSelector( state => state.app )
+  const dispatch = useDispatch()
 
 
   // ACCIONES
@@ -35,21 +37,26 @@ const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout }) => {
 
   const handleMinimize = () => {
     
-    if (document.fullscreenElement) {
-    
-      document.exitFullscreen();
-    
-    }
+    dispatch(setIsWebshellFullscreen(false))
+
   };
 
   const handleMaximize = () => {
     
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    
-    }
+    dispatch(setIsWebshellFullscreen(true) );
   
   };
+
+  // MODAL HANDLERS
+  const openModal = modal => {
+
+    setShowHelpModal(false)
+    setShowAboutModal(false)
+
+    if ( modal === 'help' ) setShowHelpModal(true);
+    if ( modal === 'about' ) setShowAboutModal(true)
+
+  }
   
   
   return (
@@ -68,11 +75,45 @@ const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout }) => {
         {title}
       </div>
     
-      <div className="connection-status">
-    
-        <span className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}></span>
+      <div className="connection-status" onClick={() => {
+        console.log('Click detectado!'); // LOG 2
+        setShowAppMenu(!showAppMenu);
+        console.log('Nuevo estado:', !showAppMenu); // LOG 3
+      }}>
+          
+        <span 
+          className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`}
+          style={{ cursor: 'pointer' }}
+        ></span>
+        <AppMenu 
+          isOpen={showAppMenu}
+          onClose={() => setShowAppMenu(false)}
+          onShowHelp={ () => openModal('help') }
+          onShowAbout={ () =>  openModal('about') }
+          socket={socket}
+          executeCommand={executeCommand}
+          setShowAuthForm={setShowAuthForm}
+          onLogout={onLogout}
+          
+        />
     
       </div>
+
+      {/* MODALS START HERE */}
+      {showHelpModal && (
+        <HelpModal 
+          isOpen={showHelpModal}
+          onClose={ () => { setShowHelpModal(false) } }
+        />
+      )}
+
+      {/* MODALS START HERE */}
+      {showAboutModal && (
+        <AboutModal
+          isOpen={showAboutModal}
+          onClose={ () => { setShowAboutModal(false) } }
+        />
+      )}
     
     </div>
   );

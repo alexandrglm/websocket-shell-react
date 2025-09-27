@@ -64,17 +64,20 @@ const TerminalInput = ({
       e.preventDefault();
       onNavigateHistory('down');
   
-    } else if (e.ctrlKey && e.key === 'd') {
-      
+    } else if (e.ctrlKey && e.key === 'd') { // CHANGE ENTIRE BLOCK
       e.preventDefault();
       
-     
+      // Cancelar comando spawn en ejecución
+      if (isExecuting && !isPtyActive && socket) {
+        console.log('[DEBUG] CTRL+D: Canceling spawn command');
+        socket.emit('cancel_command');
+        return;
+      }
+      
       // Enviar EOF si hay proceso PTY activo
       if (isPtyActive && socket) {
-     
         console.log('[DEBUG] Sending EOF (CTRL+D) to PTY process');
-        socket.emit('command_input', { input: '\x04' }); // \x04 es EOF
-     
+        socket.emit('command_input', { input: '\x04' });
       }
     }
 
@@ -109,7 +112,7 @@ const TerminalInput = ({
         onKeyPress={handleKeyPress}
         onKeyDown={handleKeyDown}
         className="terminal-input"
-        disabled={disabled || isExecuting && !isWaitingForInput}
+        disabled={disabled} // CHANGE
         autoComplete="off"
         spellCheck="false"
         placeholder={isExecuting ? 'Executing ...' : ( isWaitingForInput ? '' : '' )} // no hay otra solucón quedoble elvis

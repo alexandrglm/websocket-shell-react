@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-const TerminalOutput = ({ output, isExecuting, isWaitingForInput, outputRef }) => {
+const TerminalOutput = ({ output, isExecuting, isWaitingForInput,  isStuck, outputRef }) => {
   
   return (
   
@@ -34,20 +34,13 @@ const TerminalOutput = ({ output, isExecuting, isWaitingForInput, outputRef }) =
       
       ))}
 
-
-      { isExecuting && !isWaitingForInput  && (
-
-
-        <div className="output-line typing">
-        
-          <div className="line">
-        
-            <span className="typing-indicator">●●●</span>
-        
-          </div>
-        
-        </div>
       
+      {isExecuting && !isWaitingForInput && (
+        <div className="output-line typing">
+          <div className="line">
+            <span className="typing-indicator">●●●</span>
+          </div>
+        </div>
       )}
     
     </div>

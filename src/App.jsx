@@ -4,20 +4,22 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import Navbar from './components/navigation/Navbar';
-import Terminal from './components/webshell/Terminal';
-import Footer from './components/commons/Footer';
 
+import Navbar from './components/navigation/Navbar';
+import Footer from './components/commons/Footer';
 import { Icons } from './components/commons/FontAwesome';
 
+import Terminal from './components/webshell/Terminal';
 // Explícito, si no Vite no procesa sass
 import './styles/main.scss'
 
 
+
 const App = () => {
   
-  const { maintenance, theme } = useSelector(state => state.app);
+  const { maintenance, theme, isWebshellFullscreen } = useSelector(state => state.app);
 
+  // SLICE WEB THEMES
   useEffect(() => {
 
     if (theme === 'light') {
@@ -31,6 +33,12 @@ const App = () => {
     }
   }, [theme]);
 
+  // SLICE WEBAPP FULLSCREEN
+  useEffect( () => {
+
+    document.documentElement.setAttribute('data-fullscreen', isWebshellFullscreen)
+
+  }, [isWebshellFullscreen])
 
 
   
@@ -51,7 +59,7 @@ const App = () => {
 
   return (
     
-    <div className="app">
+    <div className="app" data-fullscreen={isWebshellFullscreen} >
       
       <Navbar />
       

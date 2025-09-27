@@ -18,6 +18,7 @@ export const useTerminal = (
   const [isExecuting, setIsExecuting] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false)
   const [isPtyActive, setIsPtyActive ] = useState(false)
+
   const outputRef = useRef(null);
 
 
@@ -56,11 +57,12 @@ export const useTerminal = (
   
   // Socket event listeners
   useEffect(() => {
-    
+   
     if (!socket || !(isAuthenticated || guestMode)) return;
-
     ///
     const handleCommandOutput = (data) => {
+
+
 
       // Only show output if there's actual content
       if (data.output && data.output.trim() !== '' && data.output !== 'Command OK') {
@@ -77,6 +79,8 @@ export const useTerminal = (
     
     
     const handleCommandError = (data) => {
+
+
     
       setOutput(prev => [...prev, {
         type: 'error',
@@ -122,6 +126,8 @@ export const useTerminal = (
 
     // COMMAND COMPLETE FINAL FLOW
     const handleCommandComplete = (data) => {
+
+
       
       setIsExecuting(false);
       setIsWaitingForInput(false);
@@ -156,12 +162,28 @@ export const useTerminal = (
 
     }
 
+    // CHANGE BLOCK ENTERO
+    const handleCommandCancel = () => {
+      console.log('[DEBUG] Command canceled by user');
+      setIsExecuting(false);
+      setIsWaitingForInput(false);
+      setIsPtyActive(false);
+      
+      setOutput(prev => [...prev, {
+          type: 'error',
+          content: ['^C - Command canceled']
+      }]);
+  };
+
+
+
     socket.on('command_output', handleCommandOutput);
     socket.on('command_error', handleCommandError);
     socket.on('command_stream', handleCommandStream);
     socket.on('command_complete', handleCommandComplete)
     socket.on('pty_input_ready', handlePtyInputReady)
     socket.on('pty_session_started', handlePtySessionStarted)
+    socket.on('command_cancel', handleCommandCancel)  // CHANGE
 
     
     return () => {
@@ -171,9 +193,10 @@ export const useTerminal = (
       socket.off('command_complete', handleCommandComplete)
       socket.off('pty_input_ready', handlePtyInputReady)
       socket.off('pty_session_started', handlePtySessionStarted)
+      socket.off('command_cancel', handleCommandCancel) // CHANGE
     };
   
-  }, [socket, isAuthenticated, guestMode, ]);
+  }, [socket, isAuthenticated, guestMode ]);
 
   
   
@@ -196,6 +219,8 @@ export const useTerminal = (
   }, [isExecuting, terminalInputRef, isAuthenticated, guestMode]);
 
   
+
+
   
   const executeCommand = useCallback((command) => {
   
@@ -243,18 +268,7 @@ export const useTerminal = (
   
     }
 
-    // Add command to output
-/*    if (!isPtyActive) {
 
-      console.log('[DEBUG] Adding command to output:', command);
-
-      setOutput(prev => [...prev, {
-        type: 'command',
-        content: `user@webshell:~$ ${command}`
-      }]);
-    }
-*/
-  
   
     // Handle special client commands
     const cmd = command.toLowerCase().trim();
@@ -299,9 +313,14 @@ export const useTerminal = (
 
     // Execute on server
     setIsExecuting(true);
+
+
+    // ENVIO EXPLIICITO, POSTERIORES EJECUCIONES y CLEANUPS
     socket.emit('execute_command', { command });
     setCurrentCommand('');
     setHistoryIndex(-1);
+    
+  
   }, [socket, isAuthenticated, guestMode, isExecuting, commandHistory, setShowAuthForm, isPtyActive, isWaitingForInput]);
 
 
@@ -344,7 +363,7 @@ export const useTerminal = (
     setCurrentCommand,
     commandHistory,
     historyIndex,
-    isExecuting,
+    isExecuting, // CHANGE
     isWaitingForInput,
     isPtyActive,
     outputRef,

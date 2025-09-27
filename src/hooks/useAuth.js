@@ -43,34 +43,21 @@ export const useAuth = (socket, onAuthSuccess = null ) => {
       socket.off('auth_failed', handleAuthFailed);
     };
 
+
+    //
     const handleAuthFailed = (data) => {
-      
-      const newAttempts = attempts + 1;
-      
-      setAttempts(newAttempts);
-      setIsAuthenticating(false);
-      
-      
-      
-      if (newAttempts >= AUTH_CONFIG.maxAttempts) {
-        
+      // Si el servidor indica lockout, mostrar solo ese mensaje
+      if (data.lockout) {
         setIsLockedOut(true);
-        setAuthError('Too many attempts. Bye!');
-        
-        setTimeout(() => {
-          
-          setIsLockedOut(false);
-          setAttempts(0);
-          setAuthError(null);
-        }, AUTH_CONFIG.lockoutTime);
-      
-      
+        setAuthError(data.error);
+        setAuthError(null); // Limpiar error anterior primero
+        setAuthError(data.error); // Mostrar solo el lockout
       } else {
-        
-        setAuthError(`Wrong credentials. Attempts: ${AUTH_CONFIG.maxAttempts - newAttempts}`);
-      
+        setAuthError(data.error);
+        setAttempts(prev => prev + 1);
       }
       
+      setIsAuthenticating(false);
       socket.off('auth_success', handleAuthSuccess);
       socket.off('auth_failed', handleAuthFailed);
     };
@@ -79,7 +66,7 @@ export const useAuth = (socket, onAuthSuccess = null ) => {
     socket.on('auth_failed', handleAuthFailed);
     
     socket.emit('authenticate', { password });
-  }, [socket]);
+  }, [socket, attempts]);
   // }, [socket, attempts]);
 
   const logout = useCallback(() => {

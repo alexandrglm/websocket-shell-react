@@ -1,9 +1,9 @@
 // ============================================
 // PANTALLA DE AUTENTICACIÓN
 // ============================================
+@use 'sass:map';
 @use '../vars' as *;
 @use '../mixins' as *;
-
 
 
 .auth-modal {
@@ -47,6 +47,10 @@
       
       width: 100%;
       max-width: 400px;
+      max-height: 85vh;
+      overflow-y: auto;
+
+      //@include terminal-scrollbar;
       
       z-index: 1001;
     }
@@ -61,6 +65,11 @@
 
         color: var(--error-color);
 
+      }
+
+      &.info {
+
+        color: var(--info-color)
       }
 
     }
@@ -128,6 +137,7 @@
         opacity: 0.5;
         cursor: not-allowed;
       }
+
     }
   
     .auth-error {
@@ -146,7 +156,7 @@
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       
       .status-indicator {
-        font-size: 1.5em;
+        font-size: 1em;
         
         &.connected {
           color: var(--primary-color);

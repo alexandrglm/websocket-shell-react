@@ -99,7 +99,7 @@ const CONFIG = {
         // Commands allowed for GUEST users (no auth required)
         guestCommands: [
             'ls', 'pwd', 'whoami', 'date', 'uptime', 
-            'help', 'clear', 'echo'
+            'help', 'clear', 'echo', 'session'
         ]
     },
     forbidden: { // ESPECIFICOS aunque GUEST ya limite.
@@ -992,10 +992,10 @@ io.on('connection', (socket) => {
         
             const lockoutInfo = IPLockoutManager.getLockoutInfo(clientIP);
         
-        
+            // Client error shown mustn't show "IP Lockdown"
             socket.emit('auth_failed', {
         
-                error: `IP LOCKDOWN. Bye!`,
+                error: `Too many failed attempts. Your session is now blocked.`,
                 lockout: true,
                 remainingTime: lockoutInfo.remainingTime
         
@@ -1049,9 +1049,11 @@ io.on('connection', (socket) => {
         
                 const lockoutInfo = IPLockoutManager.getLockoutInfo(clientIP);            
 
+
+                // Client error shown mustn't show "IP Lockdown"
                 socket.emit('auth_failed', {
         
-                    error: `IP lockdown for ${lockoutInfo.remainingMinutes} minutes. Bye!`,
+                    error: 'Too many attempts!',
                     lockout: true,
                     attempts: record.attempts,
                     remainingTime: lockoutInfo.remainingTime
@@ -1180,22 +1182,8 @@ io.on('connection', (socket) => {
                     return;
                 }
 
-
-
             }
         }
-
- 
-/*
-        // VALIDA 5 -> Redundante para comandos SOLO auth
-        if (!session.authenticated && !isCommandSafe(command, false)) {
-            
-            console.log(`[DEBUG SECURITY REDUNDNAT] Unauthorized command attempt from ${clientIP}: ${command.substring(0, 50)}`);
-            socket.emit('command_error', { error: 'Authentication required for this command' });
-            
-            return;
-        }
-*/
 
         console.log(`[DEBUG SHELL USAGE]: "${command}" from ${socket.id} (IP: ${clientIP}) - Auth: ${session.authenticated}`);
 
@@ -1240,8 +1228,6 @@ Special Commands:
   session  - Socket session info
 
 ${session.authenticated ? '' : 'To access all commands, please authenticate first.'}
-
-[SECURITY] Dangerous commands blocked
 [IP INFO] Your IP: ${clientIP}`
             });
             return;
@@ -1292,7 +1278,27 @@ IP Lockdown: ${IPLockoutManager.isIPLocked(clientIP) ? 'YES' : 'NO'}`
     });
 
 
-    // 3. Handle input for interactive input commands
+    // 3- CANCEL COMMAND CTRL+D
+
+    socket.on('cancel_command', () => {
+
+        console.log(`[DEBUG] Cancel command request from ${socket.id}`);
+
+        const session = authenticatedSessions.get(socket.id);
+
+        if (session && session.currentProcess) {
+
+            console.log('[DEBUG] Killing active process');
+
+            session.currentProcess.kill('SIGTERM');
+            session.currentProcess = null;
+            socket.emit('command_cancel');
+
+        }
+    });
+
+
+    // 4. Handle input for interactive input commands
     socket.on('command_input', (data) => {
 
         // Validar estructura

@@ -2,9 +2,9 @@
 // WEBSHELL -> AUTH MODAL FORM
 // ============================================
 import React, { useState, useRef, useEffect } from 'react';
-import { Icons, faLock } from '../commons/FontAwesome';
+import { Icons, faLock } from '../../commons/FontAwesome';
 
-import ConnectionStatus from './ConnectionStatus';
+import ConnectionStatus from '../ConnectionStatus';
 
 
 const AuthForm = ({ 
@@ -80,7 +80,7 @@ const AuthForm = ({
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       onKeyPress={handleKeyPress}
-                      placeholder="Contraseña..."
+                      placeholder="Auth ..."
                       disabled={isAuthenticating || isLockedOut}
                       className="auth-input"
                       autoComplete="off"
@@ -122,14 +122,7 @@ const AuthForm = ({
 
 
 
-        {isLockedOut && (
-          
-          <div className="auth-error">
-            Too many attempts. Bye!
-          </div>
-        
-        )}
-
+        {isLockedOut}
         <ConnectionStatus isConnected={isConnected} />
       </div>
     </div>

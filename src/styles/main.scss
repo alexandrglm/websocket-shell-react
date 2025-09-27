@@ -4,10 +4,27 @@
 
 @use './vars.scss';
 @use './mixins.scss';
-@use './components/webshell';
+
+// MAINs
 @use './components/navbar';
-@use './components/auth-screen';
 @use './components/footer';
+
+// WebShell Project
+@use './webshell/webshell';
+@use './webshell/webshell-fullscreen';
+@use './webshell/appmenu';
+// Webshell modals
+@use './webshell/webshell-modal-auth';
+@use './webshell/webshell-modal-help';
+@use './webshell/webshell-modal-about.scss';
+// Webshell themes
+@use './terminal-themes/webshell-theme-light';
+@use './terminal-themes/webshell-theme-ubuntu';
+@use './terminal-themes/webshell-theme-minimal';
+@use './terminal-themes/webshell-theme-monokai';
+
+
+
 
 // Reset básico
 * {

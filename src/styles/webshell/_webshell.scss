@@ -49,9 +49,9 @@
     @include terminal-box-shadow(40px);
   
     box-shadow:
-      0 15px 15px rgba(0, 0, 0, 0.9),       /* sombra profunda */
-      inset 0 1px 0 rgba(153, 255, 0, 0.824), /* sutil borde superior */
-      2px 10px 12px rgba(255, 255, 255, 0.15);    /* halo claro para fondo oscuro */
+      0 15px 15px rgba(0, 0, 0, 0.9),
+      inset 0 1px 0 rgba(153, 255, 0, 0.824),
+      2px 10px 12px rgba(255, 255, 255, 0.15);
   
   }
 }
@@ -62,12 +62,23 @@
   align-items: center;
   justify-content: space-between;
   
-  background: linear-gradient(to bottom, #3c3c3c, var(--header-color));
+  background: 
+    linear-gradient(to bottom, 
+    #3c3c3c, var(--header-color));
   border-bottom: 1px solid #1a1a1a;
   padding: 8px 12px;
   height: 30px;
   
   box-sizing: border-box;
+
+  .theme-selector-dropdown {
+
+    z-index: 1000;
+    //right: 0%;
+    //top: 100%;
+    position: absolute;
+  
+  }
   
   .terminal-controls {
   
@@ -103,6 +114,9 @@
   
   .connection-status {
 
+    position: relative;
+    cursor: pointer;
+
     .status-dot {
       width: 8px;
       height: 8px;
@@ -134,7 +148,7 @@
   color: var(--primary-color);
   
   
-  @include terminal-glow(#00ff00);
+  @include terminal-glow(#9dff00);
   @include terminal-scrollbar;
   
   cursor: text;
@@ -146,6 +160,7 @@
 .terminal-output {
 
   margin-bottom: 8px;
+  margin-left: 8px;
   
   .output-line {
     
