@@ -12,7 +12,7 @@ import { SessionManager } from './webshell/SessionManager.js';
 import { CommandExecutor } from './webshell/CommandExecution.js';
 
 export function setupWebshell(app, server, options = {}) {
-    
+
     console.log('[WEBSHELL] Initializing WebShell module...');
 
     // ============================================
@@ -62,7 +62,7 @@ export function setupWebshell(app, server, options = {}) {
             maxCommandLength: 200,
             commandTimeout: 30000,
             guestCommands: [
-                'ls', 'pwd', 'whoami', 'date', 'uptime', 
+                'ls', 'pwd', 'whoami', 'date', 'uptime',
                 'help', 'clear', 'echo', 'session'
             ]
         }
@@ -109,11 +109,11 @@ export function setupWebshell(app, server, options = {}) {
     // SOCKET EVENT HANDLERS
     // ============================================
     io.on('connection', (socket) => {
-        const clientIP = socket.handshake.headers['x-forwarded-for']?.split(',')[0] || 
-                        socket.handshake.headers['x-real-ip'] || 
-                        socket.handshake.address || 
-                        socket.conn.remoteAddress;
-        
+        const clientIP = socket.handshake.headers['x-forwarded-for']?.split(',')[0] ||
+        socket.handshake.headers['x-real-ip'] ||
+        socket.handshake.address ||
+        socket.conn.remoteAddress;
+
         console.log(`[WEBSHELL] Client connected: ${socket.id} from ${clientIP}`);
 
         // Create session
@@ -134,7 +134,7 @@ export function setupWebshell(app, server, options = {}) {
             // Check IP lockout
             if (security.isIPLocked(clientIP)) {
                 const lockoutInfo = security.getLockoutInfo(clientIP);
-                
+
                 socket.emit('auth_failed', {
                     error: 'Too many failed attempts. Your session is now blocked.',
                     lockout: true,
@@ -149,7 +149,7 @@ export function setupWebshell(app, server, options = {}) {
             if (isValidPassword) {
                 // Success
                 const token = auth.generateJWT(socket.id, clientIP);
-                
+
                 sessions.authenticateSession(socket.id, token);
                 security.clearIPRecord(clientIP);
 
@@ -157,8 +157,8 @@ export function setupWebshell(app, server, options = {}) {
                     message: 'Authorised access OK',
                     user: 'webshell-user',
                     server: `WebShell v0.1 (IP: ${clientIP})`,
-                    timestamp: new Date().toISOString(),
-                    token: token
+                            timestamp: new Date().toISOString(),
+                            token: token
                 });
 
                 console.log(`[WEBSHELL] Authentication success: ${socket.id} (IP: ${clientIP})`);
@@ -190,19 +190,19 @@ export function setupWebshell(app, server, options = {}) {
             // Rate limiting
             const sessionValidation = sessions.validateSession(socket.id, auth);
             const hasAuthSession = sessionValidation.valid && sessionValidation.session?.authenticated;
-            
+
             const rateLimitCheck = security.checkSocketRateLimit(clientIP, hasAuthSession);
 
             if (!rateLimitCheck.allowed) {
-                socket.emit('command_error', { 
-                    error: `Rate limit exceeded. Try again in ${rateLimitCheck.remaining} seconds.` 
+                socket.emit('command_error', {
+                    error: `Rate limit exceeded. Try again in ${rateLimitCheck.remaining} seconds.`
                 });
                 return;
             }
 
             // Get working session
             let workingSession = session;
-            
+
             if (!hasAuthSession) {
                 // Guest mode - validate command safety
                 if (!security.isCommandSafe(command, false, webshellConfig.executor.guestCommands)) {
@@ -218,7 +218,7 @@ export function setupWebshell(app, server, options = {}) {
 
             // Handle special commands
             const cmd = command.toLowerCase().trim();
-            
+
             if (cmd === 'help') {
                 const helpText = executor.generateHelpText(hasAuthSession, clientIP);
                 socket.emit('command_output', { output: helpText });
@@ -229,7 +229,7 @@ export function setupWebshell(app, server, options = {}) {
                 const sessionInfo = sessions.getSessionInfo(session.socketId);
                 const ipAttempts = security.ipAttempts.get(clientIP)?.attempts || 0;
                 const isLocked = security.isIPLocked(clientIP);
-                
+
                 const sessionText = executor.generateSessionInfo(sessionInfo, ipAttempts, isLocked);
                 socket.emit('command_output', { output: sessionText });
                 return;
@@ -238,7 +238,7 @@ export function setupWebshell(app, server, options = {}) {
             // Execute system command
             try {
                 const result = await executor.executeCommand(command, workingSession, socket, hasAuthSession);
-                
+
                 if (result.success) {
                     socket.emit('command_output', {
                         output: result.output,
@@ -270,24 +270,24 @@ export function setupWebshell(app, server, options = {}) {
     // ============================================
     // HTTP ROUTES
     // ============================================
-    
+
     // Status endpoint
     app.get('/status', async (req, res) => {
         const clientIP = req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
         const sessionStats = sessions.getStats();
-        
+
         res.json({
             server: 'healthy',
             uptime: process.uptime(),
-            memory: process.memoryUsage(),
-            sessions: sessionStats,
-            environment: process.env.NODE_ENV || 'development',
-            ipLockout: {
-                yourIP: clientIP,
-                attempts: security.ipAttempts.get(clientIP)?.attempts || 0,
-                isLocked: security.isIPLocked(clientIP),
-                remainingAttempts: security.getRemainingAttempts(clientIP)
-            }
+                 memory: process.memoryUsage(),
+                 sessions: sessionStats,
+                 environment: process.env.NODE_ENV || 'development',
+                 ipLockout: {
+                     yourIP: clientIP,
+                     attempts: security.ipAttempts.get(clientIP)?.attempts || 0,
+                 isLocked: security.isIPLocked(clientIP),
+                 remainingAttempts: security.getRemainingAttempts(clientIP)
+                 }
         });
     });
 
@@ -295,15 +295,15 @@ export function setupWebshell(app, server, options = {}) {
     app.post('/auth/validate', async (req, res) => {
         const { password } = req.body;
         const clientIP = req.headers['x-forwarded-for']?.split(',')[0] || req.ip;
-        
+
         if (security.isIPLocked(clientIP)) {
-            return res.status(429).json({ 
-                valid: false, 
+            return res.status(429).json({
+                valid: false,
                 message: 'IP Lockdown enabled',
                 lockout: true
             });
         }
-        
+
         const isValidPassword = await auth.validatePassword(password);
 
         if (isValidPassword) {
@@ -311,8 +311,8 @@ export function setupWebshell(app, server, options = {}) {
             res.json({ valid: true, message: 'AUTH OK' });
         } else {
             security.recordFailedAttempt(clientIP);
-            res.status(401).json({ 
-                valid: false, 
+            res.status(401).json({
+                valid: false,
                 message: 'WRONG PASSWORD',
                 remainingAttempts: security.getRemainingAttempts(clientIP)
             });
@@ -324,7 +324,7 @@ export function setupWebshell(app, server, options = {}) {
         if (req.targetModule !== 'webshell') {
             return next(); // Not for us, pass to next handler
         }
-        res.sendFile(path.join(process.cwd(), 'dist', 'index-webshell.html'));
+        res.sendFile(path.join(process.cwd(), 'dist', 'index.html'));
     });
 
     // ============================================
@@ -334,7 +334,7 @@ export function setupWebshell(app, server, options = {}) {
         return {
             sessions: sessions.getStats(),
             blockedIPs: Array.from(security.ipAttempts.keys())
-                .filter(ip => security.isIPLocked(ip)).length,
+            .filter(ip => security.isIPLocked(ip)).length,
             uptime: process.uptime()
         };
     }
@@ -348,26 +348,26 @@ export function setupWebshell(app, server, options = {}) {
 
         server.listen(PORT, HOST, () => {
             const stats = getStats();
-            
+
             console.log(`
 
- WebShell Server Status
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Port: ${PORT}
-Host: ${HOST}
-Setup: ${process.env.NODE_ENV || 'development'}
+            WebShell Server Status
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            Port: ${PORT}
+            Host: ${HOST}
+            Setup: ${process.env.NODE_ENV || 'development'}
 
-LOGIN CONFIG:
-• Max attempts: 3
-• Locktime: 5min
-• Cleaning every: 10min
+            LOGIN CONFIG:
+            • Max attempts: 3
+            • Locktime: 5min
+            • Cleaning every: 10min
 
-GUEST COMMANDS: ls, pwd, whoami, date, uptime, help, clear
+            GUEST COMMANDS: ls, pwd, whoami, date, uptime, help, clear
 
-CORS enabled
-Active Sessions: ${stats.sessions.total || 0}
-Blocked IPs: ${stats.blockedIPs}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            CORS enabled
+            Active Sessions: ${stats.sessions.total || 0}
+            Blocked IPs: ${stats.blockedIPs}
+            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
             `);
         });
 
@@ -386,7 +386,7 @@ Blocked IPs: ${stats.blockedIPs}
         // Graceful shutdown
         process.on('SIGTERM', () => {
             console.log('[SERVER] Received SIGTERM, shutting down gracefully...');
-            
+
             server.close(() => {
                 console.log('[SERVER] Server closed successfully');
                 process.exit(0);

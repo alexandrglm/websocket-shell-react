@@ -5,21 +5,21 @@
  * Revisar port / host en prod (Render suele admitir de todo)
  *
  * sourcemaps en false para seguridad, pero desactivalo en dev si necesario
- * 
- * 
-*/
+ *
+ *
+ */
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
 
   plugins: [react()],
-    define: {
-      global: 'globalThis',
-      'process.env': {
-        REACT_APP_SHELL_URI: JSON.stringify(process.env.REACT_APP_SHELL_URI)
-      }
-    },
+  define: {
+    global: 'globalThis',
+    'process.env': {
+      REACT_APP_SHELL_URI: JSON.stringify(process.env.REACT_APP_SHELL_URI)
+    }
+  },
   server: {
     // revisar port en render o heroku
     port: 7777,
@@ -29,12 +29,16 @@ export default defineConfig({
       '/status': 'http://localhost:3001',
       '/auth': 'http://localhost:3001'
     }
-  
+
   },
   build: {
     outDir: 'dist',
     sourcemap: false,
     rollupOptions: {
+      input: {
+        webshell: './public/index-webshell.html',
+        serverdos: './public/index-serverdos.html'
+      },
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
