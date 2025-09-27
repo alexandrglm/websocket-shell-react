@@ -26,7 +26,7 @@ const server = http.createServer(app);
 // ============================================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static('dist/public'));
+app.use(express.static('dist'));
 
 // ============================================
 // DOMAIN ROUTING CONFIGURATION
