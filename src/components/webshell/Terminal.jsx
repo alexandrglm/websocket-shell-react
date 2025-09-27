@@ -25,6 +25,9 @@ const Terminal = ({ className = '' }) => {
 
   const [showReconnectModal, setShowReconnectModal ] = useState(false)
 
+  // Para el PWD MARKER del header
+  const [currentDirectory, setCurrentDirectory ] = useState('~')
+
   // para handleWebshellFocus()
   // Para mejorar inputm focus-captura click, useRef inicial  
   const terminalInputRef = useRef(null)
@@ -44,7 +47,6 @@ const Terminal = ({ className = '' }) => {
   } = useAuth(socket, () => setShowAuthForm(false));
   
   const {
-  
     output,
     currentCommand,
     setCurrentCommand,
@@ -56,7 +58,7 @@ const Terminal = ({ className = '' }) => {
     navigateHistory,
     clearOutput
   
-  } = useTerminal(socket, isAuthenticated, guestMode, setShowAuthForm, terminalInputRef);
+  } = useTerminal(socket, isAuthenticated, guestMode, setShowAuthForm, terminalInputRef, setCurrentDirectory);
 
   
   
@@ -135,6 +137,7 @@ useEffect(() => {
         <TerminalHeader 
           isConnected={isConnected}
           onLogout={ () => { socket?.disconnect(); logout();}}
+          currentDirectory={currentDirectory}
           socket={socket}
           executeCommand={executeCommand}
           setShowAuthForm={setShowAuthForm}

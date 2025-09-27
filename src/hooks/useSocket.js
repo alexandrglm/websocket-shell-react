@@ -7,7 +7,7 @@ import io from 'socket.io-client';
 
 const SOCKET_CONFIG = {
 
-  url: 'http://localhost:3001',
+  url: process.env.REACT_APP_SHELL_URI,
   options: {
     autoConnect: false,
     cors: {

@@ -14,7 +14,15 @@ import { setIsWebshellFullscreen } from '../../store/slices/appSlice'
 
 
 
-const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout, socket, executeCommand, setShowAuthForm }) => {
+const TerminalHeader = ({ 
+    isConnected, 
+    title = 'WebShell v0.1', 
+    onLogout,
+    currentDirectory = '~',
+    socket, 
+    executeCommand, 
+    setShowAuthForm 
+  }) => {
 
   // const [ isFullScreen, setIsFullScreen ] = useState(false)
   const [showAppMenu, setShowAppMenu] = useState(false)
@@ -72,7 +80,7 @@ const TerminalHeader = ({ isConnected, title = 'WebShell v0.1', onLogout, socket
       </div>
     
       <div className="terminal-title">
-        {title}
+        {currentDirectory} - {title}
       </div>
     
       <div className="connection-status" onClick={() => {

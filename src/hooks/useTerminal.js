@@ -8,7 +8,8 @@ export const useTerminal = (
     isAuthenticated, 
     guestMode = false, 
     setShowAuthForm = null,
-    terminalInputRef = null
+    terminalInputRef = null,
+    setCurrentDirectory = null
   ) => {
 
   const [output, setOutput] = useState([]);
@@ -18,6 +19,7 @@ export const useTerminal = (
   const [isExecuting, setIsExecuting] = useState(false);
   const [isWaitingForInput, setIsWaitingForInput] = useState(false)
   const [isPtyActive, setIsPtyActive ] = useState(false)
+  const [initialPwdSent, setInitialPwdSent] = useState(false);
 
   const outputRef = useRef(null);
 
@@ -59,10 +61,16 @@ export const useTerminal = (
   useEffect(() => {
    
     if (!socket || !(isAuthenticated || guestMode)) return;
-    ///
+    
+    //
     const handleCommandOutput = (data) => {
 
 
+      // HEADER PWD MARKER
+      if (data.currentDirectory && setCurrentDirectory) {
+
+        setCurrentDirectory(data.currentDirectory);
+      }
 
       // Only show output if there's actual content
       if (data.output && data.output.trim() !== '' && data.output !== 'Command OK') {
@@ -198,7 +206,15 @@ export const useTerminal = (
   
   }, [socket, isAuthenticated, guestMode ]);
 
+  // CAPTURE PWD INITIAL
+  useEffect(() => {
+
+    if (socket && (isAuthenticated || guestMode) && !initialPwdSent) {
+      executeCommand('pwd');
+      setInitialPwdSent(true);
   
+    }
+  }, [socket, isAuthenticated, guestMode, initialPwdSent]);
   
   // Auto scroll to bottom
   useEffect(() => {

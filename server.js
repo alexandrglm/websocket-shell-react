@@ -698,7 +698,8 @@ function executePtyCommand(command, session, socket) {
             
             socket.emit('command_complete', { 
                 success: exitCode === 0,
-                exitCode: exitCode 
+                exitCode: exitCode,
+                currentDirectory: session.currentDirectory // CHANGEMARK
             });
             
             resolve({
@@ -873,7 +874,8 @@ async function executeCommand(command, session, socket) {
                 
                 socket.emit('command_complete', { 
                     success: code === 0,
-                    exitCode: code 
+                    exitCode: code,
+                    currentDirectory: session.currentDirectory // CHANGEMARK
                 });
                 
                 resolve({
@@ -951,6 +953,7 @@ io.on('connection', (socket) => {
     const allowedEvents = [
         'authenticate',
         'execute_command',
+        'cancel_command',
         'command_input',
         'disconnect'
     ]
@@ -1261,11 +1264,13 @@ IP Lockdown: ${IPLockoutManager.isIPLocked(clientIP) ? 'YES' : 'NO'}`
             if (result.success) {
                 socket.emit('command_output', {
                     output: result.output,
+                    currentDirectory: session.currentDirectory, //CHANGEMARK
                     timestamp: new Date().toISOString()
                 });
             } else {
                 socket.emit('command_error', {
                     error: result.error,
+                    currentDirectory: session.currentDirectory, ///CHANGEMARK
                     timestamp: new Date().toISOString()
                 });
             }
