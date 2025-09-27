@@ -18,7 +18,9 @@ export default defineConfig({
   define: {
     
     global: 'globalThis',
-    'process.env': {}
+    'process.env': {
+      REACT_APP_SHELL_URI: JSON.stringify(process.env.REACT_APP_SHELL_URI || 'http://localhost:3001')
+    }
   
   },
   server: {
