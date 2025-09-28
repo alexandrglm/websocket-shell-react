@@ -6,8 +6,6 @@
 @use './mixins.scss';
 
 // MAINs
-@use './components/app-moduler';
-@use './components/navbar';
 @use './components/footer';
 
 // WebShell Project
@@ -23,6 +21,7 @@
 @use './terminal-themes/webshell-theme-ubuntu';
 @use './terminal-themes/webshell-theme-minimal';
 @use './terminal-themes/webshell-theme-monokai';
+
 
 
 

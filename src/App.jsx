@@ -1,11 +1,11 @@
 // ============================================
 // App.jsx - Main Application Orchestrator
 // ============================================
-import AppModuler from './App-Moduler';
-import './styles/main.scss'
+
+import Index from "./components/pages/Index";
 
 const App = () => {
-  return <AppModuler />;
+  return <Index />;
 };
 
 export default App;

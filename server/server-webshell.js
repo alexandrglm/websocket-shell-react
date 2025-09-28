@@ -4,6 +4,7 @@
 import cors from "cors";
 import rateLimit from "express-rate-limit";
 import path from 'path';
+
 import { Server as socketIo } from "socket.io";
 
 import { SecurityManager } from './webshell/SecurityManager.js';
@@ -24,8 +25,7 @@ export function setupWebshell(app, server, options = {}) {
                 /^https?:\/\/localhost(:\d+)?$/,
                 /^https?:\/\/0\.0\.0\.0(:\d+)?$/,
                 /^https?:\/\/127\.0\.0\.1(:\d+)?$/,
-                'https://websocket-shell-react.onrender.com',
-                'https://devel.run',
+                process.env.WEBSHELL_CORS_1 || '',
                 /\.onrender\.com$/
             ],
             methods: ['GET', 'POST'],
@@ -260,6 +260,34 @@ export function setupWebshell(app, server, options = {}) {
             }
         });
 
+        // Command input handler - ESTE FALTA
+        socket.on('command_input', (data) => {
+            if (!data || typeof data.input !== 'string') {
+                console.log(`[SECURITY] Invalid command_input data from ${clientIP}`);
+                socket.disconnect(true);
+                return;
+            }
+
+            const { input } = data;
+            const sessionData = sessions.getSession(socket.id);
+            
+            if (sessionData && sessionData.currentProcess) {
+                const success = executor.sendInput(sessionData, input);
+                if (!success) {
+                    socket.emit('command_error', {
+                        error: 'No active process to receive input'
+                    });
+                }
+            } else {
+                socket.emit('command_error', {
+                    error: 'No active process to receive input'
+                });
+            }
+        });
+
+
+
+
         // Disconnect handler
         socket.on('disconnect', () => {
             console.log(`[WEBSHELL] Client disconnected: ${socket.id}`);
@@ -337,8 +365,9 @@ export function setupWebshell(app, server, options = {}) {
     // SERVER START (if requested)
     // ============================================
     if (options.shouldStart) {
-        const PORT = process.env.PORT || 3001;
-        const HOST = process.env.HOST || '0.0.0.0';
+        
+        const PORT = process.env.WEBSHELL_SERVER_PORT || 3001;
+        const HOST = process.env.WEBSHELL_SERVER_HOST || '0.0.0.0';
 
         server.listen(PORT, HOST, () => {
             const stats = getStats();

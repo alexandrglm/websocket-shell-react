@@ -439,26 +439,37 @@ export class CommandExecutor {
 
     
     sendInput(session, input) {
-    
         if (!session.currentProcess) {
             return false;
         }
-
-        if (session.isPtyMode && session.currentProcess.write) {
     
+        // Detectar CTRL+D (EOF)
+        if (input === '\x04') {
+            console.log('[EXEC] Processing EOF (CTRL+D)');
+            
+            if (session.isPtyMode && session.currentProcess.write) {
+                // PTY - enviar EOF normal
+                session.currentProcess.write(input);
+                return true;
+            } else {
+                // SPAWN - terminar proceso
+                console.log('[EXEC] Terminating SPAWN process with SIGTERM');
+                session.currentProcess.kill('SIGTERM');
+                return true;
+            }
+        }
+    
+        // Input normal (no CTRL+D)
+        if (session.isPtyMode && session.currentProcess.write) {
             session.currentProcess.write(input + '\n');
             console.log(`[EXEC PTY INPUT] -> "${input}" sent to PTY`);
-    
             return true;
-    
-    
         } else if (session.currentProcess.stdin) {
             session.currentProcess.stdin.write(input + '\n');
             console.log(`[EXEC INPUT] -> "${input}" sent to process`);
-    
             return true;
         }
-
+    
         return false;
     }
 

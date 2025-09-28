@@ -1,12 +1,12 @@
 // ============================================
-// WebShell App jsx module
+// App-webshell.jsx - WebShell Application
 // ============================================
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import Navbar from '../navigation/Navbar';
-import Footer from '../commons/Footer';
+
 import Terminal from './Terminal';
+
 
 // Explícito, si no Vite no procesa sass
 import '../../styles/main.scss';
@@ -30,24 +30,8 @@ const AppWebshell = () => {
   }, [isWebshellFullscreen]);
 
 
-
-  if (maintenance) {
-    // Futuro-> Pasarlo a render otra page concreta, entonces if será !maintenance
-    return (
-      <div className="app maintenance">
-        <h1>Server under maintenance</h1>
-      </div>
-    );
-  }
-
   return (
-    <div className="app" data-fullscreen={isWebshellFullscreen}>
-      <Navbar />
-      <div className='body-wrapper'>
-        <Terminal />
-      </div>
-      <Footer />
-    </div>
+      <Terminal />
   );
 };
 
