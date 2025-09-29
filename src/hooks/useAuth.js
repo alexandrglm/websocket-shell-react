@@ -46,18 +46,23 @@ export const useAuth = (socket, onAuthSuccess = null ) => {
 
     //
     const handleAuthFailed = (data) => {
+
       // Si el servidor indica lockout, mostrar solo ese mensaje
       if (data.lockout) {
         setIsLockedOut(true);
         setAuthError(data.error);
         setAuthError(null); // Limpiar error anterior primero
         setAuthError(data.error); // Mostrar solo el lockout
+      
       } else {
+      
         setAuthError(data.error);
         setAttempts(prev => prev + 1);
+      
       }
       
       setIsAuthenticating(false);
+      
       socket.off('auth_success', handleAuthSuccess);
       socket.off('auth_failed', handleAuthFailed);
     };

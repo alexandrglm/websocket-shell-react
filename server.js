@@ -1,5 +1,5 @@
 // ============================================
-// Server.js -> MAIN
+//  MINIMAL SERVER
 // ============================================
 import express from "express";
 import http from "http";
@@ -12,15 +12,29 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
-
-
+// ============================================
 // BASIC MIDDLEWARES
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// ============================================
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('dist'));
 
+
 // ============================================
-// MODULES-PROJECTS
+// SETUP MODULES
 // ============================================
 setupWebshell(app, server, { shouldStart: true });
 
+
+
+// ============================================
+// HEALTH CHECK
+// ============================================
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'OK',
+        timestamp: new Date(),
+        modules: ['webshell', 'pages', 'portfolio'],
+        uptime: process.uptime()
+    });
+});
